@@ -1,0 +1,31 @@
+{
+  "fixture": "phase2_planted_errors.pdf",
+  "expected_issue_counts": {
+    "same_metric_conflict": 1,
+    "sum_mismatch": 1,
+    "percent_mismatch": 1,
+    "date_order": 1,
+    "semantic_contradiction": 2
+  },
+  "planted_issue_types": [
+    "same_metric_conflict",
+    "sum_mismatch",
+    "percent_mismatch",
+    "date_order",
+    "semantic_contradiction"
+  ],
+  "notes": {
+    "same_metric_conflict": "Acme revenue is $1.5M and $1.2M for FY2025.",
+    "sum_mismatch": "North 40 plus South 50 is 90, while the table total is 100.",
+    "percent_mismatch": "Acme prior revenue 100 and current revenue 120 imply 20%, while growth is stated as 30%.",
+    "date_order": "Project end date April 30, 2025 is before its May 1, 2025 start date.",
+    "semantic_contradiction": [
+      ["The service agreement may be renewed at the end of every annual term.", "The service agreement cannot be renewed after the initial term."],
+      ["The supplier must give written notice before terminating the service agreement.", "The supplier may terminate the service agreement without giving any prior notice."]
+    ],
+    "semantic_near_misses": [
+      ["The support plan renews automatically at each monthly anniversary.", "The customer may cancel the support plan at any time without penalty."],
+      ["The insurance policy covers accidental water damage to the property.", "The insurance policy excludes intentional water damage from coverage."]
+    ]
+  }
+}
