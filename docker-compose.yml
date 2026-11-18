@@ -1,0 +1,45 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-auditor}
+      POSTGRES_USER: ${POSTGRES_USER:-auditor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-auditor}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-auditor} -d ${POSTGRES_DB:-auditor}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  api:
+    build: ./api
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://auditor:auditor@db:5432/auditor
+      UPLOAD_DIR: /data/uploads
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads:/data/uploads
+      - ./api:/app
+    depends_on:
+      db:
+        condition: service_healthy
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --hostname 0.0.0.0"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web:/app
+      - web_node_modules:/app/node_modules
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      - api
+volumes:
+  postgres_data:
+  uploads:
+  web_node_modules:
